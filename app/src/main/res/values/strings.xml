@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SqliteDepts</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="noToSearch">Numéro à chercher</string>
+    <string name="noDept">Numéro :</string>
+    <string name="noRegion">N° de région :</string>
+    <string name="nomDept">Nom :</string>
+    <string name="nomStdDept">Nom normalisé :</string>
+    <string name="areaDept">Surface :</string>
+    <string name="createdDateDept">Date de création :</string>
+    <string name="capitalDept">Chef-lieu :</string>
+    <string name="urlDept">URL :</string>
+</resources>
