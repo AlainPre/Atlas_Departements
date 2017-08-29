@@ -44,7 +44,7 @@
     <LinearLayout style="@style/buttons">
         <ImageView style="@style/button_picture"
             android:src="@drawable/bt1_add"
-            android:onClick="btnClear"
+            android:onClick="btnNouveau"
             />
         <ImageView style="@style/button_picture"
             android:src="@drawable/bt1_delete"

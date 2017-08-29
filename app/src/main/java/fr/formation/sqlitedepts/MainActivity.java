@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
         txtChefLieu = (EditText) findViewById(R.id.txtChefLieu);
         txtUrlWiki = (EditText) findViewById(R.id.txtUrlWiki);
     }
-    public void btnClear(View v){
+    public void btnNouveau(View v){
         txtSearch.setText("");
         txtNoDept.setText("");
         txtNoRegion.setText("");
@@ -53,14 +53,7 @@ public class MainActivity extends Activity {
             String no = txtSearch.getText().toString();
             Departement d = new Departement(this);
             d.select(no);
-            txtNoDept.setText(d.getNoDept());
-            txtNoRegion.setText(String.valueOf(d.getNoRegion()));
-            txtNom.setText(d.getNom());
-            txtNomStd.setText(d.getNomStd());
-            txtSurface.setText(String.valueOf(d.getSurface()));
-            txtChefLieu.setText(d.getChefLieu());
-            txtDateCreation.setText(d.getDateCreation());
-            txtUrlWiki.setText(d.getUrlWiki());
+            deptToIhm(d);
         } catch (DbException ex) {
             affToast(this, "Erreur base de données : " + ex.getMessage());
         } catch (Exception ex) {
@@ -72,6 +65,36 @@ public class MainActivity extends Activity {
 
     }
     public void btnDelete(View v){
+        try {
+            Departement d = new Departement(this);
+            d.select(txtNoDept.getText().toString());
+            d.delete();
+        } catch (DbException ex) {
+            affToast(this, "Erreur base de données : " + ex.getMessage());
+        } catch (Exception ex) {
+            affToast(this, ex.getMessage());
+        }
+    }
+
+    private void deptToIhm(Departement d){
+        txtNoDept.setText(d.getNoDept());
+        txtNoRegion.setText(String.valueOf(d.getNoRegion()));
+        txtNom.setText(d.getNom());
+        txtNomStd.setText(d.getNomStd());
+        txtSurface.setText(String.valueOf(d.getSurface()));
+        txtChefLieu.setText(d.getChefLieu());
+        txtDateCreation.setText(d.getDateCreation());
+        txtUrlWiki.setText(d.getUrlWiki());
+    }
+    private void ihmToDept(Departement d){
+        d.setNoDept(txtNoDept.getText().toString());
+        d.setNoRegion(Integer.parseInt(txtNoRegion.getText().toString()));
+        d.setNom(txtNom.getText().toString());
+        d.setNomStd(txtNomStd.getText().toString());
+        d.setSurface(Integer.parseInt(txtSurface.getText().toString()));
+        d.setChefLieu(txtChefLieu.getText().toString());
+        d.setDateCreation(txtDateCreation.getText().toString());
+        d.setUrlWiki(txtUrlWiki.getText().toString());
     }
 }
 

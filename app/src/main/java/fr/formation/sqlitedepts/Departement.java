@@ -64,4 +64,7 @@ public class Departement {
             throw new DbException(ctxt, R.string.errDeptNotFound);
         }
     }
+    public void delete() {
+
+    }
 }
