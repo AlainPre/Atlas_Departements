@@ -36,6 +36,18 @@ public class MainActivity extends Activity {
         txtChefLieu = (EditText) findViewById(R.id.txtChefLieu);
         txtUrlWiki = (EditText) findViewById(R.id.txtUrlWiki);
     }
+    public void btnClear(View v){
+        txtSearch.setText("");
+        txtNoDept.setText("");
+        txtNoRegion.setText("");
+        txtNom.setText("");
+        txtNomStd.setText("");
+        txtSurface.setText("");
+        txtDateCreation.setText("");
+        txtChefLieu.setText("");
+        txtUrlWiki.setText("");
+    }
+
     public void btnSearch(View v) {
         try {
             String no = txtSearch.getText().toString();
@@ -49,13 +61,17 @@ public class MainActivity extends Activity {
             txtChefLieu.setText(d.getChefLieu());
             txtDateCreation.setText(d.getDateCreation());
             txtUrlWiki.setText(d.getUrlWiki());
-        }
-        catch (DbException ex) {
+        } catch (DbException ex) {
+            affToast(this, "Erreur base de données : " + ex.getMessage());
+        } catch (Exception ex) {
             affToast(this, ex.getMessage());
         }
-        catch(Exception ex) {
-            affToast(this, ex.getMessage());
-        }
+    }
+    public void btnSave(View v){
+
 
     }
+    public void btnDelete(View v){
+    }
 }
+
