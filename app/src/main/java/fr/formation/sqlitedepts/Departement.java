@@ -1,13 +1,18 @@
 package fr.formation.sqlitedepts;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
+import static fr.formation.sqlitedepts.Tools.*;
 
 public class Departement {
 
     private Context ctxt;
     private SQLiteDatabase db;
+
+    private final String TABLE_NAME = "Departements";
 
     public Departement(Context ctxt) {
         this.ctxt = ctxt;
@@ -49,7 +54,10 @@ public class Departement {
     public void select(String no) throws Exception{
         String[] cols = {"no_dept", "no_region", "nom", "nom_std", "surface", "date_creation", "chef_lieu", "url_wiki"};
         String where = "no_dept ='" + no + "'";
-        Cursor curs = db.query(false,"departements", cols, where, null, "", "", "", "");
+        Cursor curs = db.query(false, TABLE_NAME, cols, where, null, "", "", "", "");
+        if(!curs.moveToFirst()) {
+            throw new DbDeptNotFoundException();
+        }
         if(curs.moveToFirst()) {
             setNoDept(curs.getString(0));
             setNoRegion(curs.getInt(1));
@@ -65,6 +73,43 @@ public class Departement {
         }
     }
     public void delete() {
+        String where = "no_dept ='" + noDept + "'";
+        db.delete(TABLE_NAME, where, null);
+    }
+    public void insert() {
+        ContentValues values = iniValues();
+        db.insert(TABLE_NAME, null, values);
+    }
+    public void update(){
+        ContentValues values = iniValues();
+        String where = "no_dept ='" + noDept + "'";
+        db.update(TABLE_NAME, values, where, null);
+    }
 
+    private ContentValues iniValues(){
+        ContentValues values = new ContentValues();
+        values.put("no_dept", noDept);
+        values.put("no_region", noRegion);
+        values.put("nom", nom);
+        values.put("nom_std", nomStd);
+        values.put("surface", surface);
+        values.put("date_creation", dateCreation);
+        values.put("chef_lieu", chefLieu);
+        values.put("url_wiki", urlWiki);
+        return values;
+    }
+
+    public class DbException extends Exception {
+        public DbException(String msg) {
+            super(msg);
+        }
+        public DbException(Context ctxt, int stringId) {
+            super(ctxt.getString(stringId));
+        }
+    }
+    public class DbDeptNotFoundException extends Exception {
+        public DbDeptNotFoundException() {
+            super("Département non trouvé.");
+        }
     }
 }

@@ -2,11 +2,8 @@ package fr.formation.sqlitedepts;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 import static fr.formation.sqlitedepts.Tools.*;
 
 public class MainActivity extends Activity {
@@ -37,6 +34,60 @@ public class MainActivity extends Activity {
         txtUrlWiki = (EditText) findViewById(R.id.txtUrlWiki);
     }
     public void btnNouveau(View v){
+        clearIhm();
+    }
+
+    public void btnSearch(View v) {
+        try {
+            String no = txtSearch.getText().toString();
+            Departement d = new Departement(this);
+            d.select(no);
+            deptToIhm(d);
+        } catch (Departement.DbException ex) {
+            clearIhm();
+            affToast(this, "Erreur base de données : " + ex.getMessage());
+        } catch (Exception ex) {
+            affToast(this, ex.getMessage());
+        }
+    }
+    public void btnSave(View v){
+        Departement d = new Departement(this);
+        try {
+            d.select(txtNoDept.getText().toString());
+            ihmToDept(d);
+            d.update();
+            affToast(this, "Département mis à jour");
+        }
+        catch(Departement.DbDeptNotFoundException ex) {
+            ihmToDept(d);
+            d.insert();
+            affToast(this, "Département ajouté");
+        }
+        catch (Exception ex){
+            affToast(this, ex.getMessage());
+        }
+    }
+    public void btnDelete(View v){
+        Runnable task = new Runnable()   {
+            @Override
+            public void run() {
+                try {
+                    Departement d = new Departement(MainActivity.this);
+                    d.select(txtNoDept.getText().toString());
+                    d.delete();
+                    clearIhm();
+                    affToast(MainActivity.this, "Département supprimé");
+                } catch (Departement.DbException ex) {
+                    affToast(MainActivity.this, "Erreur base de données : " + ex.getMessage());
+                } catch (Exception ex) {
+                    affToast(MainActivity.this, ex.getMessage());
+                }
+            }
+        };
+        runIfConfirm(this, "Confirmez-vous ?", task);
+    }
+
+    private void clearIhm() {
         txtSearch.setText("");
         txtNoDept.setText("");
         txtNoRegion.setText("");
@@ -47,35 +98,6 @@ public class MainActivity extends Activity {
         txtChefLieu.setText("");
         txtUrlWiki.setText("");
     }
-
-    public void btnSearch(View v) {
-        try {
-            String no = txtSearch.getText().toString();
-            Departement d = new Departement(this);
-            d.select(no);
-            deptToIhm(d);
-        } catch (DbException ex) {
-            affToast(this, "Erreur base de données : " + ex.getMessage());
-        } catch (Exception ex) {
-            affToast(this, ex.getMessage());
-        }
-    }
-    public void btnSave(View v){
-
-
-    }
-    public void btnDelete(View v){
-        try {
-            Departement d = new Departement(this);
-            d.select(txtNoDept.getText().toString());
-            d.delete();
-        } catch (DbException ex) {
-            affToast(this, "Erreur base de données : " + ex.getMessage());
-        } catch (Exception ex) {
-            affToast(this, ex.getMessage());
-        }
-    }
-
     private void deptToIhm(Departement d){
         txtNoDept.setText(d.getNoDept());
         txtNoRegion.setText(String.valueOf(d.getNoRegion()));
